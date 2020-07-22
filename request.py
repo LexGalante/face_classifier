@@ -1,6 +1,6 @@
 from requests import Request, Session
 import requests
-import urllib.request
+from face_classifier.model_generate import generate
 import os
 
 
@@ -38,6 +38,10 @@ def start():
         node = edges[index]
         url = node['node']['thumbnail_src']
         save_image(url, str(index))
+
+    result = generate()
+
+    print('Apareceu {}% o cr7 nos twitters da nike'.format(str(result)))
 
 
 start()
