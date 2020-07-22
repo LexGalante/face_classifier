@@ -4,7 +4,7 @@ from face_classifier.classifier import classify
 
 
 def generate():
-    faceRecognizer = cv2.face.LBPHFaceRecognizer_create()
+    model = cv2.face.LBPHFaceRecognizer_create()
     faceList = []
     faceIds = []
 
@@ -13,8 +13,5 @@ def generate():
         faceList.append(image)
         faceIds.append(1)
 
-    faceRecognizer.train(faceList, numpy.array(faceIds))
-    faceRecognizer.write('./models/trained_model.yml')
-
-    percent = classify()
-    return percent
+    model.train(faceList, numpy.array(faceIds))
+    model.write('./models/trained_model.yml')
