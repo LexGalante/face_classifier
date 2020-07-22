@@ -1,11 +1,11 @@
-from face_classifier.request import start
-from face_classifier.model_generate import model_generate
-from face_classifier.classifier import classify
+from request import start
+from model_generate import generate
+from classifier import classify
 
 print('Generate model...')
-model_generate()
+generate()
 print('Downloading twitter images....')
 start()
 print('Execute classifier...')
 result = classify()
-print(f'The CR7 appear {result}% in analyzed image!')
+print(f'The CR7 appear {result}% in analyzed images!')

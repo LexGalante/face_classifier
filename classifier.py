@@ -23,7 +23,7 @@ def image_contains_face(face, *args, **kwargs):
     return face is not None and len(face) > 0
 
 
-def get_roi_from_image(image, *args, **kwargs):
+def get_roi_from_image(image, x, y, w, h, *args, **kwargs):
     """ 
     Retrieve a region of interesting
     """
@@ -31,9 +31,12 @@ def get_roi_from_image(image, *args, **kwargs):
     return cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
 
 
+def get_face_recognizer_model():
+    model_cascade = cv2.CascadeClassifier('./models/haarcascade_frontalface_default.xml')
+    return model_cascade
+
+
 def get_trained_model():
-    model = cv2.CascadeClassifier(
-        './models/haarcascade_frontalface_default.xml')
     model = cv2.face.LBPHFaceRecognizer_create()
     model.read('./models/trained_model.yml')
 
@@ -43,6 +46,7 @@ def get_trained_model():
 def classify(acurracy=50, *args, **kwargs):
     list_images = get_images()
     model = get_trained_model()
+    face_recognizer = get_face_recognizer_model()
 
     scale = 1.01
     neighbors = 125
@@ -50,12 +54,11 @@ def classify(acurracy=50, *args, **kwargs):
 
     for i in range(0, len(list_images)):
         image = get_scale_gray_image(f"./dataset-twitter/{i}.jpg")
-        face = model.detectMultiScale(
-            image, scale, neighbors)
+        face = face_recognizer.detectMultiScale(image, scale, neighbors)
         if image_contains_face(face):
             for(x, y, w, h) in face:
-                roi = get_roi_from_image(image)
-                id, accuracy = face_recognizer.predict(roi)
+                roi = get_roi_from_image(image, x, y, w, h)
+                id, accuracy = model.predict(roi)
                 if accuracy < 50:
                     match = match + 1
 
